@@ -4,6 +4,24 @@
 - Amazon RDS
 - terraform v0.13.5
 
+## 構築方法
+1. リソース作成
+```
+terraform apply
+```
+
+2. リソース削除
+```
+terraform destroy
+```
+
+## 接続方法
+1. EC2にSSH接続、またはセッションマネージャーなどでログイン
+2. `sudo yum install mysql`コマンドを実行しMySQLをインストール
+3. `mysql -u admin -p -h [RDSのエンドポイント]`コマンドを実行し、パスワードを入力
+4. 以下の画像のように表示されれば接続成功
+![RDS接続1](https://user-images.githubusercontent.com/57606507/142875634-7ddb9f1d-a3e1-46e2-b707-47fc94af85e2.png)
+
 ## RDS (Relational Database Service)
 AWS クラウドでリレーショナルデータベースを簡単にセットアップし、運用し、拡張することのできるウェブサービス。
 
