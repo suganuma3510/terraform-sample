@@ -1,8 +1,9 @@
-# rds-terraform
+# RDS-Terraform
+[Terraform で RDS 構築して接続確認するまで](https://zenn.dev/suganuma/articles/fe14451aeda28f)
 
 ## 使用技術
 - Amazon RDS
-- terraform v0.13.5
+- Terraform v1.0.11
 
 ## 構築方法
 1. リソース作成
