@@ -21,3 +21,6 @@ terraform destroy
 2. `ok`が表示されることを確認
 
 ### 参考
+- [ALB \- Terraformで構築するAWS](https://y-ohgi.com/introduction-terraform/handson/alb/#alb)
+- [TerraformでALBを作成する \- Qiita](https://qiita.com/gogo-muscle/items/81d9f73f16f901d95424)
+- [【ロードバランサー構築】terraform AWS環境構築 第3回 \- たけログ](https://takelg.com/terraform-aws-loadbalancer-alb/)
