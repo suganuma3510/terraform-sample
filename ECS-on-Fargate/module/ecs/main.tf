@@ -27,15 +27,11 @@ resource "aws_ecs_service" "service" {
     assign_public_ip = true
   }
 
-  lifecycle {
-    ignore_changes = [task_definition]
+  load_balancer {
+    target_group_arn = var.lb_tg_arn
+    container_name   = "nginx"
+    container_port   = "80"
   }
-
-  # load_balancer {
-  #   target_group_arn = aws_lb_target_group.alb-tg.arn
-  #   container_name   = "nginx"
-  #   container_port   = "80"
-  # }
 }
 
 #--------------------------------------------------------------
@@ -49,7 +45,7 @@ resource "aws_ecs_task_definition" "task" {
   network_mode             = "awsvpc"
   cpu                      = "256"
   memory                   = "512"
-  # execution_role_arn       = aws_iam_role.ecs_execution_role.arn
+  execution_role_arn       = var.iam_role_arn
   # task_role_arn            = aws_iam_role.ecs_execution_role.arn
 }
 

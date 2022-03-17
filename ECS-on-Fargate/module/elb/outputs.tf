@@ -1,9 +1,5 @@
-output "vpc_cidr" { value = aws_vpc.vpc.cidr_block }
+output "lb_tg_arn" { value = aws_lb_target_group.alb-tg.arn }
 
-output "pub_subnet_ids" { value = aws_subnet.pub-sub.*.id }
+output "http_listener_arn" { value = aws_alb_listener.http.arn }
 
-output "pri_subnet_ids" { value = aws_subnet.pri-sub.*.id }
-
-output "http_listener_arn" {value = aws_lb_listener.http.arn}
-
-output "https_listener_arn" {value = aws_lb_listener.https.arn}
+# output "https_listener_arn" { value = aws_alb_listener.https.arn }
