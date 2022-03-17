@@ -20,15 +20,15 @@ module "network" {
   pri_cidrs = var.private_subnet_cidrs
 }
 
-# module "elb" {
-#   source = "./module/elb"
+module "elb" {
+  source = "./module/elb"
 
-#   name            = var.name
-#   vpc_id         = module.network.vpc_id
-#   pub_subnet_ids = module.network.pub_subnet_ids
-#   # ingress_ports  = var.elb_ingress_ports
-#   # iacm_id        = module.acm.acm_id
-# }
+  name           = var.name
+  vpc_id         = module.network.vpc_id
+  pub_subnet_ids = module.network.pub_subnet_ids
+  # ingress_ports  = var.elb_ingress_ports
+  # acm_id         = module.acm.acm_id
+}
 
 module "ecs" {
   source = "./module/ecs"
@@ -36,6 +36,15 @@ module "ecs" {
   name           = var.name
   vpc_id         = module.network.vpc_id
   pub_subnet_ids = module.network.pub_subnet_ids
+  lb_tg_arn      = module.elb.lb_tg_arn
+  iam_role_arn   = module.iam.iam_role_arn
   # ingress_ports  = var.elb_ingress_ports
-  # iacm_id        = module.acm.acm_id
+  # acm_id        = module.acm.acm_id
+}
+
+
+module "iam" {
+  source = "./module/iam"
+
+  name = var.name
 }

@@ -4,7 +4,7 @@ variable "vpc_id" {}
 
 variable "pub_subnet_ids" {}
 
-variable "acm_id" {}
+# variable "acm_id" {}
 
 variable "ingress_ports" {
   type        = list(number)
