@@ -16,10 +16,6 @@ resource "aws_ecs_service" "service" {
   desired_count   = 1
   launch_type     = "FARGATE"
   cluster         = aws_ecs_cluster.cluster.arn
-  # depends_on = [
-  #   aws_iam_role_policy.ecs_service_role_policy,
-  #   aws_lb.blog_alb
-  # ]
 
   network_configuration {
     security_groups  = [aws_security_group.ecs-sg.id]
@@ -75,10 +71,10 @@ resource "aws_security_group" "ecs-sg" {
 #  CloudWatch log gloup
 #--------------------------------------------------------------
 
-resource "aws_cloudwatch_log_group" "cloudwatch" {
-  name = "${var.name}-cloudwatch"
+# resource "aws_cloudwatch_log_group" "cloudwatch" {
+#   name = "${var.name}-cloudwatch"
 
-  tags = {
-    Application = "${var.name}-ecs-cloudwatch"
-  }
-}
+#   tags = {
+#     Application = "${var.name}-ecs-cloudwatch"
+#   }
+# }
