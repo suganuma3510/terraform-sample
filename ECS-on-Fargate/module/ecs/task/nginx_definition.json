@@ -7,6 +7,14 @@
         "containerPort": 80,
         "hostPort": 80
       }
-    ]
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-region": "ap-northeast-1",
+        "awslogs-group": "${log_group}",
+        "awslogs-stream-prefix": "nginx"
+      }
+    }
   }
 ]

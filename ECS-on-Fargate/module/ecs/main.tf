@@ -71,10 +71,10 @@ resource "aws_security_group" "ecs-sg" {
 #  CloudWatch log gloup
 #--------------------------------------------------------------
 
-# resource "aws_cloudwatch_log_group" "cloudwatch" {
-#   name = "${var.name}-cloudwatch"
+resource "aws_cloudwatch_log_group" "cloudwatch" {
+  name = "${var.name}-cloudwatch"
 
-#   tags = {
-#     Application = "${var.name}-ecs-cloudwatch"
-#   }
-# }
+  tags = {
+    Application = "${var.name}-ecs-cloudwatch"
+  }
+}
