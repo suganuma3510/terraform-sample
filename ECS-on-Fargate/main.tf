@@ -6,6 +6,16 @@ variable "public_subnet_cidrs" { type = list(string) }
 variable "private_subnet_cidrs" { type = list(string) }
 # variable "elb_ingress_ports" { type = list(number) }
 
+terraform {
+  required_version = "=v1.0.11"
+
+  # backend "s3" {
+  #   bucket = var.bucket_name
+  #   key    = "terraform.tfstate"
+  #   region = var.region
+  # }
+}
+
 provider "aws" {
   region = var.region
 }
