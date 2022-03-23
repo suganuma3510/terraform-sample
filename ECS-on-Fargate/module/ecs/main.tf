@@ -17,6 +17,10 @@ resource "aws_ecs_service" "service" {
   launch_type     = "FARGATE"
   cluster         = aws_ecs_cluster.cluster.arn
 
+  depends_on = [
+    var.lb_tg_arn
+  ]
+
   network_configuration {
     security_groups  = [aws_security_group.ecs-sg.id]
     subnets          = var.pub_subnet_ids
@@ -34,6 +38,13 @@ resource "aws_ecs_service" "service" {
 #  ECS task
 #--------------------------------------------------------------
 
+data "template_file" "nginx-container-definitions" {
+  template = file("./module/ecs/task/nginx_definition.json")
+  vars = {
+    LOGS_GROUP_NAME = aws_cloudwatch_log_group.cloudwatch.name
+  }
+}
+
 resource "aws_ecs_task_definition" "task" {
   family                   = "${var.name}-task"
   container_definitions    = file("./module/ecs/task/nginx_definition.json")
@@ -42,7 +53,7 @@ resource "aws_ecs_task_definition" "task" {
   cpu                      = "256"
   memory                   = "512"
   execution_role_arn       = var.iam_role_arn
-  # task_role_arn            = aws_iam_role.ecs_execution_role.arn
+  task_role_arn            = var.iam_role_arn
 }
 
 #--------------------------------------------------------------
@@ -72,9 +83,9 @@ resource "aws_security_group" "ecs-sg" {
 #--------------------------------------------------------------
 
 resource "aws_cloudwatch_log_group" "cloudwatch" {
-  name = "${var.name}-cloudwatch"
+  name = "/ecs/${var.name}-service"
 
   tags = {
-    Application = "${var.name}-ecs-cloudwatch"
+    Application = "${var.name}-ecs-logs"
   }
 }
