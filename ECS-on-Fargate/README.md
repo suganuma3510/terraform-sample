@@ -4,6 +4,33 @@
 - AWS
 - Terraform v1.0.11
 
+## ディレクトリ構成
+```
+.
+├── README.md
+├── main.tf
+├── module
+│   ├── ecs
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   ├── task
+│   │   │   └── nginx_definition.json
+│   │   └── variables.tf
+│   ├── elb
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   ├── iam
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   └── network
+│       ├── main.tf
+│       ├── outputs.tf
+│       └── variables.tf
+└── terraform.tfvars
+```
+
 ## 構築方法
 1. リソース作成
 ```
@@ -16,6 +43,11 @@ terraform destroy
 ```
 
 ## 接続方法
+1. マネジメントコンソールにてECSタスクのパブリックIPまたは、ロードバランサーのDNS名からコンテナにアクセスする
+![image](https://user-images.githubusercontent.com/57606507/159903124-3fa034dd-a11a-45b8-b25a-11f968c03f48.png)
+![image](https://user-images.githubusercontent.com/57606507/159903605-2c3c0957-7cdd-4b61-9f67-9c2cb154df03.png)
+2. `Welcome to nginx!`と表示されれば成功
+![image](https://user-images.githubusercontent.com/57606507/159902516-7116b75e-076c-4a9b-9fba-d8cdcf978915.png)
 
 
 ### 参考
