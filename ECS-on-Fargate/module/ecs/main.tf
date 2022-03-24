@@ -47,13 +47,12 @@ data "template_file" "nginx-container-definitions" {
 
 resource "aws_ecs_task_definition" "task" {
   family                   = "${var.name}-task"
-  container_definitions    = file("./module/ecs/task/nginx_definition.json")
+  container_definitions    = data.template_file.nginx-container-definitions.rendered
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = "256"
   memory                   = "512"
   execution_role_arn       = var.iam_role_arn
-  task_role_arn            = var.iam_role_arn
 }
 
 #--------------------------------------------------------------
@@ -75,6 +74,17 @@ resource "aws_security_group" "ecs-sg" {
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
     }
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.name}-ecs-sg"
   }
 }
 
