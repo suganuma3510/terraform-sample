@@ -24,7 +24,7 @@ resource "aws_ecs_service" "service" {
   network_configuration {
     security_groups  = [aws_security_group.ecs-sg.id]
     subnets          = var.subnet_ids
-    assign_public_ip = true
+    assign_public_ip = false
   }
 
   load_balancer {

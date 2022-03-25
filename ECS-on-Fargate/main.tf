@@ -51,7 +51,7 @@ module "ecs" {
 
   name         = var.name
   vpc_id       = module.network.vpc_id
-  subnet_ids   = module.network.pub_subnet_ids
+  subnet_ids   = module.network.pri_subnet_ids
   lb_tg_arn    = module.elb.lb_tg_arn
   iam_role_arn = module.iam.iam_role_arn
   # ingress_ports  = var.elb_ingress_ports
