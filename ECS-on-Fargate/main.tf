@@ -30,6 +30,12 @@ module "network" {
   pri_cidrs = var.private_subnet_cidrs
 }
 
+module "iam" {
+  source = "./module/iam"
+
+  name = var.name
+}
+
 module "elb" {
   source = "./module/elb"
 
@@ -43,18 +49,24 @@ module "elb" {
 module "ecs" {
   source = "./module/ecs"
 
-  name           = var.name
-  vpc_id         = module.network.vpc_id
-  pub_subnet_ids = module.network.pub_subnet_ids
-  lb_tg_arn      = module.elb.lb_tg_arn
-  iam_role_arn   = module.iam.iam_role_arn
+  name         = var.name
+  vpc_id       = module.network.vpc_id
+  subnet_ids   = module.network.pub_subnet_ids
+  lb_tg_arn    = module.elb.lb_tg_arn
+  iam_role_arn = module.iam.iam_role_arn
   # ingress_ports  = var.elb_ingress_ports
-  # acm_id        = module.acm.acm_id
-}
 
+  service_config = {
+    container_name = "nginx"
+    container_port = 80
+    desired_count  = 1
+  }
 
-module "iam" {
-  source = "./module/iam"
-
-  name = var.name
+  task_config = {
+    definitions_file_name = "nginx_definition.json"
+    ecr_image_uri         = "nginx:1.14"
+    cpu                   = 256
+    memory                = 512
+    region                = var.region
+  }
 }

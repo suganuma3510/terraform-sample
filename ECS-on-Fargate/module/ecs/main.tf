@@ -13,7 +13,7 @@ resource "aws_ecs_cluster" "cluster" {
 resource "aws_ecs_service" "service" {
   name            = "${var.name}-service"
   task_definition = aws_ecs_task_definition.task.arn
-  desired_count   = 1
+  desired_count   = var.service_config.desired_count
   launch_type     = "FARGATE"
   cluster         = aws_ecs_cluster.cluster.arn
 
@@ -23,14 +23,14 @@ resource "aws_ecs_service" "service" {
 
   network_configuration {
     security_groups  = [aws_security_group.ecs-sg.id]
-    subnets          = var.pub_subnet_ids
+    subnets          = var.subnet_ids
     assign_public_ip = true
   }
 
   load_balancer {
     target_group_arn = var.lb_tg_arn
-    container_name   = "nginx"
-    container_port   = "80"
+    container_name   = var.service_config.container_name
+    container_port   = var.service_config.container_port
   }
 }
 
@@ -38,20 +38,23 @@ resource "aws_ecs_service" "service" {
 #  ECS task
 #--------------------------------------------------------------
 
-data "template_file" "nginx-container-definitions" {
-  template = file("./module/ecs/task/nginx_definition.json")
+data "template_file" "container-definitions" {
+  template = file("./module/ecs/task/${var.task_config.definitions_file_name}")
   vars = {
+    SERVICE_NAME = var.service_config.container_name
+    ECR_ARN      = var.task_config.ecr_image_uri
     LOGS_GROUP_NAME = aws_cloudwatch_log_group.cloudwatch.name
+    REGION = var.task_config.region
   }
 }
 
 resource "aws_ecs_task_definition" "task" {
   family                   = "${var.name}-task"
-  container_definitions    = data.template_file.nginx-container-definitions.rendered
+  container_definitions    = data.template_file.container-definitions.rendered
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = "256"
-  memory                   = "512"
+  cpu                      = var.task_config.cpu
+  memory                   = var.task_config.memory
   execution_role_arn       = var.iam_role_arn
 }
 

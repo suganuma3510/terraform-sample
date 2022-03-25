@@ -1,7 +1,7 @@
 [
   {
-    "name": "nginx",
-    "image": "nginx:1.14",
+    "name": "${SERVICE_NAME}",
+    "image": "${ECR_ARN}",
     "portMappings": [
       {
         "containerPort": 80,
@@ -11,9 +11,9 @@
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
-        "awslogs-region": "ap-northeast-1",
+        "awslogs-region": "${REGION}",
         "awslogs-group": "${LOGS_GROUP_NAME}",
-        "awslogs-stream-prefix": "nginx"
+        "awslogs-stream-prefix": "${SERVICE_NAME}"
       }
     }
   }
