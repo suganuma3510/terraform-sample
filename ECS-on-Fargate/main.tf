@@ -10,9 +10,9 @@ terraform {
   required_version = "=v1.0.11"
 
   # backend "s3" {
-  #   bucket = var.bucket_name
+  #   bucket = "devday2022-bucket"
   #   key    = "terraform.tfstate"
-  #   region = var.region
+  #   region = "ap-northeast-1"
   # }
 }
 
@@ -36,6 +36,12 @@ module "iam" {
   name = var.name
 }
 
+module "cloudwatch" {
+  source = "./module/cloudwatch"
+
+  name = var.name
+}
+
 module "elb" {
   source = "./module/elb"
 
@@ -49,11 +55,12 @@ module "elb" {
 module "ecs" {
   source = "./module/ecs"
 
-  name         = var.name
-  vpc_id       = module.network.vpc_id
-  subnet_ids   = module.network.pri_subnet_ids
-  lb_tg_arn    = module.elb.lb_tg_arn
-  iam_role_arn = module.iam.iam_role_arn
+  name            = var.name
+  vpc_id          = module.network.vpc_id
+  subnet_ids      = module.network.pri_subnet_ids
+  lb_tg_arn       = module.elb.lb_tg_arn
+  iam_role_arn    = module.iam.iam_role_arn
+  logs_group_name = module.cloudwatch.logs_group_name
   # ingress_ports  = var.elb_ingress_ports
 
   service_config = {

@@ -41,10 +41,10 @@ resource "aws_ecs_service" "service" {
 data "template_file" "container-definitions" {
   template = file("./module/ecs/task/${var.task_config.definitions_file_name}")
   vars = {
-    SERVICE_NAME = var.service_config.container_name
-    ECR_ARN      = var.task_config.ecr_image_uri
-    LOGS_GROUP_NAME = aws_cloudwatch_log_group.cloudwatch.name
-    REGION = var.task_config.region
+    SERVICE_NAME    = var.service_config.container_name
+    ECR_ARN         = var.task_config.ecr_image_uri
+    LOGS_GROUP_NAME = var.logs_group_name
+    REGION          = var.task_config.region
   }
 }
 
@@ -88,17 +88,5 @@ resource "aws_security_group" "ecs-sg" {
 
   tags = {
     Name = "${var.name}-ecs-sg"
-  }
-}
-
-#--------------------------------------------------------------
-#  CloudWatch log gloup
-#--------------------------------------------------------------
-
-resource "aws_cloudwatch_log_group" "cloudwatch" {
-  name = "/ecs/${var.name}-service"
-
-  tags = {
-    Application = "${var.name}-ecs-logs"
   }
 }
