@@ -6,7 +6,9 @@ variable "subnet_ids" {}
 
 variable "lb_tg_arn" {}
 
-variable iam_role_arn {}
+variable "iam_role_arn" {}
+
+variable "logs_group_name" {}
 
 variable "ingress_ports" {
   type        = list(number)

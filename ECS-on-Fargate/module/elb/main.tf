@@ -14,11 +14,11 @@ resource "aws_lb" "alb" {
 }
 
 resource "aws_lb_target_group" "alb-tg" {
-  name                 = "${var.name}-alb-tg"
-  vpc_id               = var.vpc_id
-  port                 = 80
-  protocol             = "HTTP"
-  target_type          = "ip"
+  name        = "${var.name}-alb-tg"
+  vpc_id      = var.vpc_id
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "ip"
 
   health_check {
     enabled             = true
