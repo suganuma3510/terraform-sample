@@ -20,4 +20,3 @@ private_subnet_cidrs = ["10.0.2.0/24", "10.0.3.0/24"]
 
 db_name     = "testdb"
 db_username = "admin"
-db_password = "jg405jyWoeWr8gWF49tFj08q2p3jgtEE8w4U58"    # [要変更]
