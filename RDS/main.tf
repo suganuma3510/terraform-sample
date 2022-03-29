@@ -7,6 +7,10 @@ variable "private_subnet_cidrs" { type = list(string) }
 variable "db_name" {}
 variable "db_username" {}
 
+terraform {
+  required_version = "=v1.0.11"
+}
+
 provider "aws" {
   region = var.region
 }
@@ -21,12 +25,25 @@ module "network" {
   pri_cidrs = var.private_subnet_cidrs
 }
 
+module "iam" {
+  source = "./module/iam"
+
+  name = var.name
+}
+
 module "ec2" {
   source = "./module/ec2"
 
-  app_name       = var.name
-  vpc_id         = module.network.vpc_id
-  pub_subnet_ids = module.network.pub_subnet_ids
+  app_name                  = var.name
+  vpc_id                    = module.network.vpc_id
+  pub_subnet_ids            = module.network.pub_subnet_ids
+  iam_instance_profile_name = module.iam.iam_instance_profile_name
+}
+
+module "secrets" {
+  source = "./module/secrets"
+
+  name = var.name
 }
 
 module "rds" {
@@ -35,6 +52,7 @@ module "rds" {
   app_name       = var.name
   db_name        = var.db_name
   db_username    = var.db_username
+  db_password    = module.secrets.db_password
   vpc_id         = module.network.vpc_id
   pri_subnet_ids = module.network.pri_subnet_ids
 }

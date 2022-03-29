@@ -1,1 +1,1 @@
-output "db_address" { value = aws_db_instance.db.address }
+output "db_address" { value = aws_db_instance.rds.address }
