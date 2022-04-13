@@ -32,6 +32,11 @@ resource "aws_ecs_service" "service" {
     container_name   = var.service_config.container_name
     container_port   = var.service_config.container_port
   }
+
+  capacity_provider_strategy {
+    capacity_provider = "FARGATE_SPOT"
+    weight            = 1
+  }
 }
 
 #--------------------------------------------------------------
