@@ -58,49 +58,34 @@ resource "aws_route_table_association" "pub-rtb-as" {
 }
 
 #--------------------------------------------------------------
-# Private subnet
+# Security group
 #--------------------------------------------------------------
 
-resource "aws_subnet" "pri-sub" {
-  count = length(var.pri_cidrs)
+resource "aws_security_group" "ec2-sg" {
+  name = "${var.name}-ec2-sg"
 
-  vpc_id            = aws_vpc.vpc.id
-  cidr_block        = element(var.pri_cidrs, count.index)
-  availability_zone = element(var.azs, count.index)
-  tags = {
-    Name = "${var.name}-pri-${element(var.azs, count.index)}"
+  description = "EC2 service security group for ${var.name}"
+  vpc_id      = aws_vpc.vpc.id
+
+  ingress {
+    from_port   = 2376
+    to_port     = 2376
+    description = "Docker Machine"
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.vpc.cidr_block]
   }
-}
 
-resource "aws_route_table" "pri-rtb" {
-  vpc_id = aws_vpc.vpc.id
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat-gw.id
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.vpc.cidr_block]
   }
-  tags = {
-    Name = "${var.name}-pri-rtb"
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
-}
-
-resource "aws_route_table_association" "pri-rtb-as" {
-  count = length(var.pri_cidrs)
-
-  subnet_id      = element(aws_subnet.pri-sub.*.id, count.index)
-  route_table_id = aws_route_table.pri-rtb.id
-}
-
-#--------------------------------------------------------------
-# NAT
-#--------------------------------------------------------------
-
-resource "aws_eip" "nat-eip" {
-  vpc        = true
-  depends_on = [aws_internet_gateway.igw]
-}
-
-resource "aws_nat_gateway" "nat-gw" {
-  allocation_id = aws_eip.nat-eip.id
-  subnet_id     = aws_subnet.pub-sub[0].id
-  depends_on    = [aws_internet_gateway.igw]
 }

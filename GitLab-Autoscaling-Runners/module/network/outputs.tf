@@ -4,4 +4,4 @@ output "vpc_cidr" { value = aws_vpc.vpc.cidr_block }
 
 output "pub_subnet_ids" { value = aws_subnet.pub-sub.*.id }
 
-output "pri_subnet_ids" { value = aws_subnet.pri-sub.*.id }
+output "ec2_security_group" { value = aws_security_group.ec2-sg }
