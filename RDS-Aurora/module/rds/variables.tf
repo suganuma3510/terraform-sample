@@ -10,6 +10,14 @@ variable "vpc_id" {}
 
 variable "pri_subnet_ids" {}
 
+variable "pri_subnet_cidr_blocks" {
+  type = list(string)
+}
+
+variable "source_security_group_ids" {
+  type = list(string)
+}
+
 variable "engine" {
   default = "aurora-mysql"
 }
@@ -20,4 +28,8 @@ variable "engine_version" {
 
 variable "db_instance" {
   default = "db.t4g.medium"
+}
+
+variable "db_instance_count" {
+  default = 1
 }
