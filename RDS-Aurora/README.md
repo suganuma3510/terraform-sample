@@ -1,8 +1,8 @@
 # RDS-Aurora-Terraform
 
 ## 使用技術
-- Amazon RDS - Aurora
-- Terraform v1.1.9
+- Amazon RDS-Aurora
+- Terraform v1.4.0
 
 ## ディレクトリ構成
 ```
@@ -10,10 +10,6 @@
 ├── README.md
 ├── main.tf
 ├── module
-│   ├── network
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   └── variables.tf
 │   ├── rds
 │   │   ├── main.tf
 │   │   ├── outputs.tf

@@ -4,7 +4,7 @@
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster
 resource "aws_rds_cluster" "default" {
-  cluster_identifier     = "${var.db_name}-aurora-cluster"
+  cluster_identifier     = "${var.app_name}-aurora-cluster"
   engine                 = var.engine
   engine_version         = var.engine_version
   database_name          = var.db_name
@@ -26,7 +26,7 @@ resource "aws_rds_cluster" "default" {
 resource "aws_rds_cluster_instance" "default" {
   count = var.db_instance_count
 
-  identifier         = "${var.db_name}-aurora-cluster-instance-${count.index}"
+  identifier         = "${var.app_name}-aurora-cluster-instance-${count.index}"
   cluster_identifier = aws_rds_cluster.default.id
 
   engine               = aws_rds_cluster.default.engine
@@ -41,7 +41,7 @@ resource "aws_rds_cluster_instance" "default" {
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster_parameter_group
 resource "aws_rds_cluster_parameter_group" "default" {
-  name   = "${var.db_name}-aurora-cluster-parameter-group"
+  name   = "${var.app_name}-aurora-cluster-parameter-group"
   family = "aurora-mysql5.7"
 
   parameter {
@@ -56,8 +56,8 @@ resource "aws_rds_cluster_parameter_group" "default" {
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group
 resource "aws_db_subnet_group" "rds" {
-  name        = var.db_name
-  description = "rds subnet group for ${var.db_name}"
+  name        = var.app_name
+  description = "rds subnet group for ${var.app_name}"
   subnet_ids  = var.pri_subnet_ids
 }
 
@@ -75,7 +75,6 @@ resource "aws_security_group" "rds" {
     Name = "${var.app_name}-rds-sg"
   }
 }
-
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule
 resource "aws_security_group_rule" "rds_ingress_mysql" {
