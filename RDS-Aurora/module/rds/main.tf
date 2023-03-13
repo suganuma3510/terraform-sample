@@ -42,11 +42,17 @@ resource "aws_rds_cluster_instance" "default" {
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster_parameter_group
 resource "aws_rds_cluster_parameter_group" "default" {
   name   = "${var.app_name}-aurora-cluster-parameter-group"
-  family = "aurora-mysql5.7"
+  family = var.family
 
-  parameter {
-    name  = "time_zone"
-    value = "Asia/Tokyo"
+  dynamic "parameter" {
+    for_each = var.parameter_groups
+    iterator = parameter
+
+    content {
+      name         = parameter.key
+      value        = parameter.value
+      apply_method = "pending-reboot"
+    }
   }
 }
 

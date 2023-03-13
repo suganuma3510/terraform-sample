@@ -33,3 +33,14 @@ variable "db_instance" {
 variable "db_instance_count" {
   default = 1
 }
+
+variable "family" {
+  default = "aurora-mysql5.7"
+}
+
+variable "parameter_groups" {
+  type = map(string)
+  default = {
+    "time_zone" = "Asia/Tokyo"
+  }
+}
