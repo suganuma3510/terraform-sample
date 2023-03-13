@@ -2,18 +2,20 @@
 #  Elastic Load Balancing
 #--------------------------------------------------------------
 
-resource "aws_lb" "alb" {
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb
+resource "aws_lb" "default" {
   name               = "${var.name}-alb"
   load_balancer_type = "application"
   subnets            = var.pub_subnet_ids
-  security_groups    = [aws_security_group.alb-sg.id]
+  security_groups    = [aws_security_group.alb.id]
 
   tags = {
     Name = "${var.name}-alb"
   }
 }
 
-resource "aws_lb_target_group" "alb-tg" {
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group
+resource "aws_lb_target_group" "default" {
   name        = "${var.name}-alb-tg"
   port        = 80
   protocol    = "HTTP"
@@ -33,8 +35,9 @@ resource "aws_lb_target_group" "alb-tg" {
   }
 }
 
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener
 resource "aws_alb_listener" "http" {
-  load_balancer_arn = aws_lb.alb.arn
+  load_balancer_arn = aws_lb.default.arn
   port              = "80"
   protocol          = "HTTP"
 
@@ -50,7 +53,7 @@ resource "aws_alb_listener" "http" {
 }
 
 # resource "aws_lb_listener" "http" {
-#   load_balancer_arn = aws_lb.alb.arn
+#   load_balancer_arn = aws_lb.default.arn
 #   port              = "80"
 #   protocol          = "HTTP"
 
@@ -66,13 +69,13 @@ resource "aws_alb_listener" "http" {
 # }
 
 # resource "aws_lb_listener" "https" {
-#   load_balancer_arn = aws_lb.alb.arn
+#   load_balancer_arn = aws_lb.default.arn
 #   port              = "443"
 #   protocol          = "HTTPS"
-#   certificate_arn   = var.acm_id
+#   certificate_arn   = var.certificate_arn
 
 #   default_action {
-#     target_group_arn = aws_lb_target_group.alb-tg.arn
+#     target_group_arn = aws_lb_target_group.default.arn
 #     type             = "forward"
 #   }
 # }
@@ -81,31 +84,42 @@ resource "aws_alb_listener" "http" {
 # Security group
 #--------------------------------------------------------------
 
-resource "aws_security_group" "alb-sg" {
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
+resource "aws_security_group" "alb" {
   name        = "${var.name}-alb-sg"
   description = "ALB security group for ${var.name}"
   vpc_id      = var.vpc_id
 
-  dynamic "ingress" {
-    for_each = var.ingress_ports
-    iterator = port
-
-    content {
-      from_port   = port.value
-      to_port     = port.value
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = {
     Name = "${var.name}-alb-sg"
   }
+}
+
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule
+resource "aws_security_group_rule" "alb_ingress_http" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.alb.id
+}
+
+resource "aws_security_group_rule" "alb_ingress_https" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.alb.id
+}
+
+
+resource "aws_security_group_rule" "alb_egress_vpc" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = [var.vpc_cidr]
+  security_group_id = aws_security_group.alb.id
 }

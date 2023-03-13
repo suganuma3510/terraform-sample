@@ -2,12 +2,8 @@ variable "name" {}
 
 variable "vpc_id" {}
 
+variable "vpc_cidr" {}
+
 variable "pub_subnet_ids" {}
 
-# variable "acm_id" {}
-
-variable "ingress_ports" {
-  type        = list(number)
-  description = "list of ingress ports"
-  default     = [80, 443]
-}
+# variable "certificate_arn" {}

@@ -2,8 +2,9 @@
 # General
 #--------------------------------------------------------------
 
-name   = "alb-sample"
-region = "ap-northeast-1"
+name        = "alb-sample"
+region      = "ap-northeast-1"
+domain_name = "example.com"
 
 #--------------------------------------------------------------
 # Network
@@ -17,5 +18,3 @@ private_subnet_cidrs = []
 #--------------------------------------------------------------
 # Elastic Load Balancing
 #--------------------------------------------------------------
-
-# elb_ingress_ports = [80, 443]

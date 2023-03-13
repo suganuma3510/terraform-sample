@@ -1,16 +1,37 @@
 # ALB-Terraform
 
-## 使用技術
-- AWS
-- Terraform v1.0.11
+## 必要条件
+- Terraform v1.4.0
+
+## ディレクトリ構成
+```
+.
+├── README.md
+├── main.tf
+├── module
+│   ├── acm
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   └── elb
+│       ├── main.tf
+│       ├── outputs.tf
+│       └── variables.tf
+└── terraform.tfvars
+```
 
 ## 構築方法
-1. リソース作成
+1. 初期化 & モジュール読み込み
+```
+terraform init
+```
+
+2. リソース作成
 ```
 terraform apply
 ```
 
-2. リソース削除
+3. リソース削除
 ```
 terraform destroy
 ```
@@ -20,8 +41,11 @@ terraform destroy
 ![image](https://user-images.githubusercontent.com/57606507/158185562-76a3e36d-65c8-4861-8694-9bcbeeab760c.png)
 2. `ok`が表示されることを確認
 
-### 参考
+<details><summary>参考</summary>
+
 - [ALB \- Terraformで構築するAWS](https://y-ohgi.com/introduction-terraform/handson/alb/#alb)
 - [TerraformでALBを作成する \- Qiita](https://qiita.com/gogo-muscle/items/81d9f73f16f901d95424)
 - [【ロードバランサー構築】terraform AWS環境構築 第3回 \- たけログ](https://takelg.com/terraform-aws-loadbalancer-alb/)
 - [TerraformでALBを構築する \| DevelopersIO](https://dev.classmethod.jp/articles/terraform-alb/)
+
+</details>
