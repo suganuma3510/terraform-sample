@@ -1,9 +1,8 @@
 # RDS-Terraform
 [Terraform で RDS 構築して接続確認するまで - Zenn](https://zenn.dev/suganuma/articles/fe14451aeda28f)
 
-## 使用技術
-- Amazon RDS
-- Terraform v1.0.11
+## 必要条件
+- Terraform v1.4.0
 
 ## ディレクトリ構成
 ```
@@ -16,10 +15,6 @@
 │   │   ├── outputs.tf
 │   │   └── variables.tf
 │   ├── iam
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   └── variables.tf
-│   ├── network
 │   │   ├── main.tf
 │   │   ├── outputs.tf
 │   │   └── variables.tf

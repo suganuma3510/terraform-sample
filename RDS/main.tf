@@ -8,7 +8,7 @@ variable "db_name" {}
 variable "db_username" {}
 
 terraform {
-  required_version = "=v1.0.11"
+  required_version = "=v1.4.0"
 }
 
 provider "aws" {
@@ -31,13 +31,20 @@ module "iam" {
   name = var.name
 }
 
-module "ec2" {
+module "jump-ec2" {
   source = "./module/ec2"
 
   app_name                  = var.name
   vpc_id                    = module.network.vpc_id
   pub_subnet_ids            = module.network.pub_subnet_ids
   iam_instance_profile_name = module.iam.iam_instance_profile_name
+
+  remote_exec_commands = [
+    "sudo yum -y install mysql"
+  ]
+  depend_resources = [
+    module.rds.db_instance_id
+  ]
 }
 
 module "secrets" {
