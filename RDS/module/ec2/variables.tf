@@ -26,3 +26,13 @@ variable "ingress_config" {
   ]
   description = "list of ingress config"
 }
+
+variable "remote_exec_commands" {
+  type    = list(string)
+  default = []
+}
+
+variable "depend_resources" {
+  type    = list(string)
+  default = []
+}
