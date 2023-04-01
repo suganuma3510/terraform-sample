@@ -37,5 +37,6 @@ terraform destroy
 - [Amazon OpenSearch Service とは？ \- Amazon OpenSearch Service](https://docs.aws.amazon.com/ja_jp/opensearch-service/latest/developerguide/what-is.html)
 - [Amazon OpenSearch Service のきめ細かなアクセスコントロール \- Amazon OpenSearch Service](https://docs.aws.amazon.com/ja_jp/opensearch-service/latest/developerguide/fgac.html)
 - [チュートリアル: Amazon OpenSearch Service を用いて検索アプリケーションを作成する \- Amazon OpenSearch Service](https://docs.aws.amazon.com/ja_jp/opensearch-service/latest/developerguide/search-example.html)
+- [NGINX プロキシを使用して Amazon OpenSearch Dashboards にアクセスする \| AWS re:Post](https://repost.aws/ja/knowledge-center/opensearch-outside-vpc-nginx)
 
 </details>

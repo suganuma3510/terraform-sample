@@ -28,7 +28,10 @@ module "network" {
 module "opensearch" {
   source = "./module/opensearch"
 
-  name     = var.name
-  username = var.username
-  password = var.password
+  name                   = var.name
+  username               = var.username
+  password               = var.password
+  vpc_id                 = module.network.vpc_id
+  pri_subnet_ids         = module.network.pri_subnet_ids
+  pri_subnet_cidr_blocks = module.network.pri_subnet_cidr_blocks
 }
