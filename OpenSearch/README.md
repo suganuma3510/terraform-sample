@@ -32,6 +32,16 @@ terraform apply
 terraform destroy
 ```
 
+## OpenSearch クエリ例
+```
+GET employee/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+```
+
 <details><summary>参考</summary>
 
 - [Amazon OpenSearch Service とは？ \- Amazon OpenSearch Service](https://docs.aws.amazon.com/ja_jp/opensearch-service/latest/developerguide/what-is.html)

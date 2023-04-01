@@ -62,9 +62,13 @@ module "source-rds" {
 module "target-opensearch" {
   source = "../OpenSearch/module/opensearch"
 
-  name     = var.name
-  username = var.opensearch_username
-  password = var.opensearch_password
+  name                   = var.name
+  username               = var.opensearch_username
+  password               = var.opensearch_password
+  vpc_id                 = module.network.vpc_id
+  pri_subnet_ids         = [module.network.pri_subnet_ids[0]]
+  pri_subnet_cidr_blocks = module.network.pri_subnet_cidr_blocks
+  # source_security_group_ids = [module.dms.dms_security_group_id]
 }
 
 module "dms" {
@@ -100,24 +104,17 @@ module "dms" {
     password          = var.opensearch_password
     elasticsearch_arn = module.target-opensearch.elasticsearch_arn
   }
-}
-
-# module "iam" {
-#   source = "../RDS/module/iam"
-
-#   name = var.name
 # }
 
 # module "jump-ec2" {
 #   source = "../RDS/module/ec2"
 
-#   app_name                  = var.name
-#   vpc_id                    = module.network.vpc_id
-#   pub_subnet_ids            = module.network.pub_subnet_ids
-#   iam_instance_profile_name = module.iam.iam_instance_profile_name
+#   app_name       = var.name
+#   vpc_id         = module.network.vpc_id
+#   pub_subnet_ids = module.network.pub_subnet_ids
 
 #   remote_exec_commands = [
-#     "sudo yum -y install mysql"
+#     "sudo amazon-linux-extras install -y nginx1"
 #   ]
 #   depend_resources = concat(
 #     module.source-rds.rds_cluster_instance_ids,

@@ -47,5 +47,6 @@ terraform destroy
 - [TerraformでALBを作成する \- Qiita](https://qiita.com/gogo-muscle/items/81d9f73f16f901d95424)
 - [【ロードバランサー構築】terraform AWS環境構築 第3回 \- たけログ](https://takelg.com/terraform-aws-loadbalancer-alb/)
 - [TerraformでALBを構築する \| DevelopersIO](https://dev.classmethod.jp/articles/terraform-alb/)
+- [Enable access logs for your Application Load Balancer \- Elastic Load Balancing](https://docs.aws.amazon.com/en_us/elasticloadbalancing/latest/application/enable-access-logging.html#attach-bucket-policy)
 
 </details>

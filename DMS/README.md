@@ -39,5 +39,6 @@ terraform destroy
 - [Lambda 実行ロール \- AWS Lambda](https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/lambda-intro-execution-role.html)
 - [TerraformでDMSレプリケーションインスタンスを自動構築する\(基本編\) \- Qiita](https://qiita.com/neruneruo/items/d327e2e0bf504c4c8c43)
 - [チュートリアル: Amazon OpenSearch Service を用いて検索アプリケーションを作成する \- Amazon OpenSearch Service](https://docs.aws.amazon.com/ja_jp/opensearch-service/latest/developerguide/search-example.html)
+- [変換ルール式を使用した列の内容の定義 \- AWS Database Migration Service](https://docs.aws.amazon.com/ja_jp/dms/latest/userguide/CHAP_Tasks.CustomizingTasks.TableMapping.SelectionTransformation.Expressions.html#CHAP_Tasks.CustomizingTasks.TableMapping.SelectionTransformation.Expressions-SQLite)
 
 </details>
