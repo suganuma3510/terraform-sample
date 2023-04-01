@@ -16,19 +16,13 @@ provider "aws" {
 }
 
 module "network" {
-  source = "./module/network"
+  source = "../Network/module/network"
 
   name      = var.name
   vpc_cidr  = var.vpc_cidr
   azs       = var.azs
   pub_cidrs = var.public_subnet_cidrs
   pri_cidrs = var.private_subnet_cidrs
-}
-
-module "iam" {
-  source = "./module/iam"
-
-  name = var.name
 }
 
 module "jump-ec2" {

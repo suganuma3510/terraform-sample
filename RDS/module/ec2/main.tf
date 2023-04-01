@@ -2,15 +2,46 @@
 # EC2
 #--------------------------------------------------------------
 
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami
+# data "aws_ami" "amazon2_amd64" {
+#   most_recent = true
+#   filter {
+#     name   = "name"
+#     values = ["Windows_Server-2019*"]
+#   }
+#   filter {
+#     name   = "platform"
+#     values = ["windows"]
+#   }
+#   filter {
+#     name   = "architecture"
+#     values = ["x86_64"]
+#   }
+#   owners = ["amazon"]
+# }
+
+data "aws_ami" "amazon2_amd64" {
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-kernel*"]
+  }
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+  owners = ["amazon"]
+}
+
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance
 resource "aws_instance" "ec2" {
-  ami                         = "ami-011facbea5ec0363b"
+  ami                         = data.aws_ami.amazon2_amd64.id
   instance_type               = "t2.micro"
   subnet_id                   = var.pub_subnet_ids[0]
   associate_public_ip_address = "true"
   key_name                    = aws_key_pair.ec2.key_name
   vpc_security_group_ids      = [aws_security_group.ec2.id]
-  iam_instance_profile        = var.iam_instance_profile_name
+  iam_instance_profile        = aws_iam_instance_profile.systems-manager.name
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip
@@ -89,4 +120,38 @@ resource "terraform_data" "db_setup" {
   }
 
   depends_on = [var.depend_resources]
+}
+
+#--------------------------------------------------------------
+# IAM Role
+#--------------------------------------------------------------
+
+data "aws_iam_policy_document" "ec2" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+
+data "aws_iam_policy" "systems-manager" {
+  arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_role" "ec2" {
+  name               = "${var.app_name}-ec2-role"
+  assume_role_policy = data.aws_iam_policy_document.ec2.json
+}
+
+resource "aws_iam_role_policy_attachment" "ec2" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = data.aws_iam_policy.systems-manager.arn
+}
+
+resource "aws_iam_instance_profile" "systems-manager" {
+  name = "${var.app_name}-ec2-instance-profile"
+  role = aws_iam_role.ec2.name
 }

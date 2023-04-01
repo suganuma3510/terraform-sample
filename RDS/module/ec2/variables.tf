@@ -4,8 +4,6 @@ variable "vpc_id" {}
 
 variable "pub_subnet_ids" {}
 
-variable "iam_instance_profile_name" {}
-
 variable "ingress_config" {
   type = list(object({
     port        = string
@@ -19,9 +17,14 @@ variable "ingress_config" {
       cidr_blocks = ["0.0.0.0/0"]
     },
     {
-      port        = 3306
+      port        = 80
       protocol    = "tcp"
-      cidr_blocks = ["10.0.0.0/16"]
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+      port        = 443
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
     }
   ]
   description = "list of ingress config"
