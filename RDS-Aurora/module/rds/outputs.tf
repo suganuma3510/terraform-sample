@@ -2,7 +2,7 @@ output "db_security_group_id" {
   value = aws_security_group.rds.id
 }
 
-output "db_endpoint" {
+output "db_writer_endpoint" {
   value = aws_rds_cluster.default.endpoint
 }
 
