@@ -19,14 +19,14 @@ resource "aws_vpc" "default" {
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet
 resource "aws_subnet" "public" {
-  count = length(var.pub_cidrs)
+  for_each = var.pub_cidrs
 
   vpc_id                  = aws_vpc.default.id
-  cidr_block              = element(var.pub_cidrs, count.index)
-  availability_zone       = element(var.azs, count.index)
+  cidr_block              = each.value
+  availability_zone       = "${var.region}${each.key}"
   map_public_ip_on_launch = true
   tags = {
-    Name = "${var.name}-pub-${element(var.azs, count.index)}"
+    Name = "${var.name}-public-${each.key}"
   }
 }
 
@@ -38,15 +38,15 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.default.id
   }
   tags = {
-    Name = "${var.name}-pub-rtb"
+    Name = "${var.name}-public-rtb"
   }
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association
 resource "aws_route_table_association" "public" {
-  count = length(var.pub_cidrs)
+  for_each = aws_subnet.public
 
-  subnet_id      = element(aws_subnet.public.*.id, count.index)
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
 }
 
@@ -56,13 +56,14 @@ resource "aws_route_table_association" "public" {
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet
 resource "aws_subnet" "private" {
-  count = length(var.pri_cidrs)
+  for_each = var.pri_cidrs
 
-  vpc_id            = aws_vpc.default.id
-  cidr_block        = element(var.pri_cidrs, count.index)
-  availability_zone = element(var.azs, count.index)
+  vpc_id                  = aws_vpc.default.id
+  cidr_block              = each.value
+  availability_zone       = "${var.region}${each.key}"
+  map_public_ip_on_launch = true
   tags = {
-    Name = "${var.name}-pri-${element(var.azs, count.index)}"
+    Name = "${var.name}-private-${each.key}"
   }
 }
 
@@ -74,15 +75,15 @@ resource "aws_route_table" "private" {
     nat_gateway_id = aws_nat_gateway.default.id
   }
   tags = {
-    Name = "${var.name}-pri-rtb"
+    Name = "${var.name}-private-rtb"
   }
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association
 resource "aws_route_table_association" "private" {
-  count = length(var.pri_cidrs)
+  for_each = aws_subnet.private
 
-  subnet_id      = element(aws_subnet.private.*.id, count.index)
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.private.id
 }
 
@@ -111,6 +112,6 @@ resource "aws_eip" "nat" {
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/nat_gateway
 resource "aws_nat_gateway" "default" {
   allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public[0].id
+  subnet_id     = aws_subnet.public["a"].id
   depends_on    = [aws_internet_gateway.default]
 }
