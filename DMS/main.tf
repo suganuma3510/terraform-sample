@@ -1,9 +1,8 @@
 variable "region" {}
 variable "name" {}
 variable "vpc_cidr" {}
-variable "azs" {}
-variable "public_subnet_cidrs" { type = list(string) }
-variable "private_subnet_cidrs" { type = list(string) }
+variable "public_subnet_cidrs" { type = map(string) }
+variable "private_subnet_cidrs" { type = map(string) }
 variable "db_name" {}
 variable "db_username" {}
 variable "db_password" {}
@@ -23,8 +22,8 @@ module "network" {
   source = "../Network/module/network"
 
   name      = var.name
+  region    = var.region
   vpc_cidr  = var.vpc_cidr
-  azs       = var.azs
   pub_cidrs = var.public_subnet_cidrs
   pri_cidrs = var.private_subnet_cidrs
 }
