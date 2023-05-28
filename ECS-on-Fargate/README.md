@@ -1,8 +1,7 @@
 # ECS-on-Fargate-Terraform
 
-## 使用技術
-- AWS
-- Terraform v1.0.11
+## 必要条件
+- Terraform v1.4.0
 
 ## ディレクトリ構成
 ```
@@ -10,28 +9,16 @@
 ├── README.md
 ├── main.tf
 ├── module
-│   ├── cloudwatch
+│   ├── ecs_task
 │   │   ├── main.tf
 │   │   ├── outputs.tf
 │   │   └── variables.tf
-│   ├── ecs
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   ├── task
-│   │   │   └── nginx_definition.json
-│   │   └── variables.tf
-│   ├── elb
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   └── variables.tf
-│   ├── iam
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   └── variables.tf
-│   └── network
+│   └── iam
 │       ├── main.tf
 │       ├── outputs.tf
 │       └── variables.tf
+├── template
+│   └── nginx_definition.json
 └── terraform.tfvars
 ```
 
@@ -54,6 +41,12 @@ terraform destroy
 
 
 ### 参考
+ECS
 - [TerraformでECS FargateのApache起動をコード化してみた \| DevelopersIO](https://dev.classmethod.jp/articles/terraform-ecs-fargate-apache-run/)
 - [【Terraform】Terraformを使用したECS Webアプリ構築 \- Qiita](https://qiita.com/Shoma0210/items/b998a260c5d18839fb7a#ecs)
 - [ECS \- Terraformで構築するAWS](https://y-ohgi.com/introduction-terraform/handson/ecs/)
+
+CloudWatch Agent
+- [Amazon ECS での CloudWatch エージェントと X\-Ray デーモンのデプロイ \- Amazon CloudWatch](https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/monitoring/deploy_servicelens_CloudWatch_agent_deploy_ECS.html)
+- [【AWS ECS 小ネタ】CloudWatch Agentを使用してクラスター名、タスクIDのディメンション付きでディスク使用率のメトリクスを収集する \- ENECHANGE Developer Blog](https://tech.enechange.co.jp/entry/2022/10/04/101051)
+- [Amazon CloudWatchエージェントのセットアップ方法（Linux） \| Tech ブログ \| JIG\-SAW OPS](https://ops.jig-saw.com/tech-cate/amazon-cloudwatch-setup)

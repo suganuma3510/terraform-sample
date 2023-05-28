@@ -1,13 +1,11 @@
 variable "region" {}
 variable "name" {}
 variable "vpc_cidr" {}
-variable "azs" {}
-variable "public_subnet_cidrs" { type = list(string) }
-variable "private_subnet_cidrs" { type = list(string) }
-# variable "elb_ingress_ports" { type = list(number) }
+variable "public_subnet_cidrs" { type = map(string) }
+variable "private_subnet_cidrs" { type = map(string) }
 
 terraform {
-  required_version = "=v1.0.11"
+  required_version = "=v1.4.0"
 
   # backend "s3" {
   #   bucket = "devday2022-bucket"
@@ -21,11 +19,11 @@ provider "aws" {
 }
 
 module "network" {
-  source = "./module/network"
+  source = "../Network/module/network"
 
   name      = var.name
+  region    = var.region
   vpc_cidr  = var.vpc_cidr
-  azs       = var.azs
   pub_cidrs = var.public_subnet_cidrs
   pri_cidrs = var.private_subnet_cidrs
 }
@@ -36,44 +34,54 @@ module "iam" {
   name = var.name
 }
 
-module "cloudwatch" {
-  source = "./module/cloudwatch"
-
-  name = var.name
-}
-
 module "elb" {
-  source = "./module/elb"
+  source = "../ALB/module/elb"
 
   name           = var.name
   vpc_id         = module.network.vpc_id
+  vpc_cidr       = module.network.vpc_cidr
   pub_subnet_ids = module.network.pub_subnet_ids
-  # ingress_ports  = var.elb_ingress_ports
-  # acm_id         = module.acm.acm_id
+  # certificate_arn = module.acm.certificate_arn
 }
 
-module "ecs" {
-  source = "./module/ecs"
+#--------------------------------------------------------------
+#  ECS
+#--------------------------------------------------------------
 
-  name            = var.name
-  vpc_id          = module.network.vpc_id
-  subnet_ids      = module.network.pri_subnet_ids
-  lb_tg_arn       = module.elb.lb_tg_arn
-  iam_role_arn    = module.iam.iam_role_arn
-  logs_group_name = module.cloudwatch.logs_group_name
-  # ingress_ports  = var.elb_ingress_ports
+resource "aws_ecs_cluster" "cluster" {
+  name = "${var.name}-cluster"
+}
 
-  service_config = {
-    container_name = "nginx"
-    container_port = 80
-    desired_count  = 1
+module "ecs_nginx" {
+  source = "./module/ecs_task"
+
+  name                      = var.name
+  vpc_id                    = module.network.vpc_id
+  subnet_ids                = module.network.pri_subnet_ids
+  source_security_group_ids = [module.elb.lb_security_group_id]
+  load_balancer_config = {
+    target_group_arn = module.elb.lb_tg_arn
+    container_name   = "nginx"
+    container_port   = 80
   }
+  iam_role_arn    = module.iam.iam_role_arn
+  ecs_cluster_arn = aws_ecs_cluster.cluster.arn
+  task_config     = local.task_config.nginx
+}
 
+locals {
   task_config = {
-    definitions_file_name = "nginx_definition.json"
-    ecr_image_uri         = "nginx:1.14"
-    cpu                   = 256
-    memory                = 512
-    region                = var.region
+    nginx = {
+      cpu           = 256
+      memory        = 512
+      desired_count = 1
+      container_definitions = templatefile("${path.module}/template/nginx_definition.json",
+        {
+          SERVICE_NAME    = "nginx"
+          ECR_ARN         = "nginx:1.14"
+          LOGS_GROUP_NAME = "/ecs/${var.name}-service"
+          REGION          = var.region
+      })
+    }
   }
 }
