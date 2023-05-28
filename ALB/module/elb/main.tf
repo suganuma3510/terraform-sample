@@ -36,23 +36,34 @@ resource "aws_lb_target_group" "default" {
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener
-resource "aws_alb_listener" "http" {
+# resource "aws_lb_listener" "test" {
+#   load_balancer_arn = aws_lb.default.arn
+#   port              = "80"
+#   protocol          = "HTTP"
+
+#   default_action {
+#     type = "fixed-response"
+
+#     fixed_response {
+#       content_type = "text/plain"
+#       status_code  = "200"
+#       message_body = "ok"
+#     }
+#   }
+# }
+
+resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.default.arn
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
-    type = "fixed-response"
-
-    fixed_response {
-      content_type = "text/plain"
-      status_code  = "200"
-      message_body = "ok"
-    }
+    target_group_arn = aws_lb_target_group.default.arn
+    type             = "forward"
   }
 }
 
-# resource "aws_lb_listener" "http" {
+# resource "aws_lb_listener" "http_redirect" {
 #   load_balancer_arn = aws_lb.default.arn
 #   port              = "80"
 #   protocol          = "HTTP"
