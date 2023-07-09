@@ -16,7 +16,7 @@ resource "aws_ecs_service" "default" {
   name            = "${var.name}-service"
   task_definition = aws_ecs_task_definition.default.arn
   desired_count   = var.task_config.desired_count
-  launch_type     = "FARGATE"
+  # launch_type     = "FARGATE"
   cluster         = var.ecs_cluster_arn
 
   # depends_on = [
@@ -38,10 +38,17 @@ resource "aws_ecs_service" "default" {
     }
   }
 
-  # capacity_provider_strategy {
-  #   capacity_provider = "FARGATE_SPOT"
-  #   weight            = 1
-  # }
+  capacity_provider_strategy {
+    base              = 1
+    capacity_provider = "FARGATE"
+    weight            = 0
+  }
+
+  capacity_provider_strategy {
+    base              = 0
+    capacity_provider = "FARGATE_SPOT"
+    weight            = 1
+  }
 }
 
 #--------------------------------------------------------------

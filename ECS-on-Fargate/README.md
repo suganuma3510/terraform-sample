@@ -45,6 +45,7 @@ ECS
 - [TerraformでECS FargateのApache起動をコード化してみた \| DevelopersIO](https://dev.classmethod.jp/articles/terraform-ecs-fargate-apache-run/)
 - [【Terraform】Terraformを使用したECS Webアプリ構築 \- Qiita](https://qiita.com/Shoma0210/items/b998a260c5d18839fb7a#ecs)
 - [ECS \- Terraformで構築するAWS](https://y-ohgi.com/introduction-terraform/handson/ecs/)
+- [\[AWS\]\[Terraform\]ECS Scheduled TaskのコンテナをFargate Spotに切り替える – ADACHIN SERVER LABO](https://blog.adachin.me/archives/49415)
 
 CloudWatch Agent
 - [Amazon ECS での CloudWatch エージェントと X\-Ray デーモンのデプロイ \- Amazon CloudWatch](https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/monitoring/deploy_servicelens_CloudWatch_agent_deploy_ECS.html)
