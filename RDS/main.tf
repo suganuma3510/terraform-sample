@@ -5,6 +5,7 @@ variable "public_subnet_cidrs" { type = map(string) }
 variable "private_subnet_cidrs" { type = map(string) }
 variable "db_name" {}
 variable "db_username" {}
+variable "db_password" {}
 
 terraform {
   required_version = "=v1.4.0"
@@ -27,32 +28,20 @@ module "network" {
 module "jump-ec2" {
   source = "./module/ec2"
 
-  app_name                  = var.name
-  vpc_id                    = module.network.vpc_id
-  pub_subnet_ids            = module.network.pub_subnet_ids
-  iam_instance_profile_name = module.iam.iam_instance_profile_name
-
-  remote_exec_commands = [
-    "sudo yum -y install mysql"
-  ]
-  depend_resources = [
-    module.rds.db_instance_id
-  ]
-}
-
-module "secrets" {
-  source = "./module/secrets"
-
-  name = var.name
+  app_name   = var.name
+  vpc_id     = module.network.vpc_id
+  subnet_ids = module.network.pri_subnet_ids
 }
 
 module "rds" {
   source = "./module/rds"
 
-  app_name       = var.name
-  db_name        = var.db_name
-  db_username    = var.db_username
-  db_password    = module.secrets.db_password
-  vpc_id         = module.network.vpc_id
-  pri_subnet_ids = module.network.pri_subnet_ids
+  app_name                  = var.name
+  db_name                   = var.db_name
+  db_username               = var.db_username
+  db_password               = var.db_password
+  vpc_id                    = module.network.vpc_id
+  subnet_ids                = module.network.pri_subnet_ids
+  subnet_cidr_blocks        = module.network.pri_subnet_cidr_blocks
+  source_security_group_ids = [module.jump-ec2.ec2_security_group_id]
 }

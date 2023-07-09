@@ -24,19 +24,13 @@ module "network" {
   pri_cidrs = var.private_subnet_cidrs
 }
 
-module "secrets" {
-  source = "./module/secrets"
-
-  name = var.name
-}
-
 module "rds-aurora" {
   source = "./module/rds"
 
   app_name                  = var.name
   db_name                   = var.db_name
   db_username               = var.db_username
-  db_password               = module.secrets.db_password
+  db_password               = var.db_password
   vpc_id                    = module.network.vpc_id
   pri_subnet_ids            = module.network.pri_subnet_ids
   pri_subnet_cidr_blocks    = module.network.pri_subnet_cidr_blocks

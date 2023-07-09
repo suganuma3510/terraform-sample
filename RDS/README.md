@@ -14,15 +14,7 @@
 │   │   ├── main.tf
 │   │   ├── outputs.tf
 │   │   └── variables.tf
-│   ├── iam
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   └── variables.tf
-│   ├── rds
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   └── variables.tf
-│   └── secrets
+│   └── rds
 │       ├── main.tf
 │       ├── outputs.tf
 │       └── variables.tf
@@ -46,24 +38,25 @@ terraform destroy
 ```
 
 ## 接続方法
-1. マネジメントコンソールで`AWS Secrets Manager > シークレット > rds-sample-db-password（作成したシークレットの名称）`の順でアクセス
-2. シークレットの値を取得するを押下すると作成されたパスワードが表示される（後述のDBログイン時に使用します）
-![image](https://user-images.githubusercontent.com/57606507/160391273-db6e0a8a-3681-4be8-bcb8-3885d7ac971c.png)
-3. EC2にSSH接続、またはセッションマネージャーなどでログイン
-4. 下記コマンドを実行しMySQLをインストール
-```
-sudo yum install mysql
-```
-5. 下記コマンドを実行後、パスワードを入力しMySQLにログイン
+1. EC2にセッションマネージャーでログイン
+2. 下記コマンドを実行後、パスワードを入力しMySQLにログイン
 ```
 mysql -u admin -p -h [RDSのエンドポイント]
 ```
-6. 以下の画像のように表示されれば接続成功
+3. 以下の画像のように表示されれば接続成功
 ![RDS接続1](https://user-images.githubusercontent.com/57606507/142875634-7ddb9f1d-a3e1-46e2-b707-47fc94af85e2.png)
 
 ### 注意点
-DBのパスワードはSecrets Managerで管理していますが、`terraform.tfstate`ファイルにはランダムで生成したパスワードが残っています。  
-`terraform.tfstate`ファイル自体が秘匿情報なので、本番環境では暗号化しアクセスが制限されたS3などで管理する必要があります。
+- パスワードの管理方法  
+DBのパスワードはTerraformで管理しない方が望ましいです。  
+仮のパスワードでRDSを作成したら手動でDBのパスワードを変更し、SSMパラメータストアやSecrets Managerで管理するのが安全かと思います。
+
+- 利用可能なRDSのEngineとVersion情報を確認する方法
+  ```
+  aws rds describe-db-engine-versions \
+  --query "DBEngineVersions[*].[{FamiryName:DBParameterGroupFamily,Vesion:EngineVersion}]" \
+  --out table
+  ```
 
 ## RDS (Relational Database Service)
 AWS クラウドでリレーショナルデータベースを簡単にセットアップし、運用し、拡張することのできるウェブサービス。
