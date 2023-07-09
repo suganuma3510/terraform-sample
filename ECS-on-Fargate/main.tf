@@ -74,7 +74,7 @@ locals {
     nginx = {
       cpu           = 256
       memory        = 512
-      desired_count = 1
+      desired_count = 2
       container_definitions = templatefile("${path.module}/template/nginx_definition.json",
         {
           SERVICE_NAME    = "nginx"
