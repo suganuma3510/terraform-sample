@@ -2,7 +2,7 @@
 [Terraform で RDS 構築して接続確認するまで - Zenn](https://zenn.dev/suganuma/articles/fe14451aeda28f)
 
 ## 必要条件
-- Terraform v1.4.0
+- Terraform v1.5.5
 
 ## ディレクトリ構成
 ```
@@ -38,25 +38,15 @@ terraform destroy
 ```
 
 ## 接続方法
-1. EC2にセッションマネージャーでログイン
-2. 下記コマンドを実行後、パスワードを入力しMySQLにログイン
+1. マネジメントコンソールで`AWS Secrets Manager > シークレット > rdsXXXXX（自動で作成されたシークレットの名称）`の順でアクセス
+2. シークレットの値を取得するを押下すると作成されたパスワードが表示される（後述のDBログイン時に使用します）
+3. EC2にセッションマネージャーでログイン
+4. 下記コマンドを実行後、パスワードを入力しMySQLにログイン
 ```
 mysql -u admin -p -h [RDSのエンドポイント]
 ```
-3. 以下の画像のように表示されれば接続成功
+5. 以下の画像のように表示されれば接続成功
 ![RDS接続1](https://user-images.githubusercontent.com/57606507/142875634-7ddb9f1d-a3e1-46e2-b707-47fc94af85e2.png)
-
-### 注意点
-- パスワードの管理方法  
-DBのパスワードはTerraformで管理しない方が望ましいです。  
-仮のパスワードでRDSを作成したら手動でDBのパスワードを変更し、SSMパラメータストアやSecrets Managerで管理するのが安全かと思います。
-
-- 利用可能なRDSのEngineとVersion情報を確認する方法
-  ```
-  aws rds describe-db-engine-versions \
-  --query "DBEngineVersions[*].[{FamiryName:DBParameterGroupFamily,Vesion:EngineVersion}]" \
-  --out table
-  ```
 
 ## RDS (Relational Database Service)
 AWS クラウドでリレーショナルデータベースを簡単にセットアップし、運用し、拡張することのできるウェブサービス。
@@ -93,5 +83,6 @@ MySQLおよびPostgreSQLと互換性がある、クラウド向けのリレー�
 - [完全初心者向けTerraform入門（AWS）](https://blog.dcs.co.jp/aws/20210401-terraformaws.html)
 - [TerraformでAuroraを作成する際にセキュアにパスワードを設定したい](https://zenn.dev/bun913/scraps/8fbc0534fd1a79)
 - [amazon web services \- Terraform RDS database credentials \- Stack Overflow](https://stackoverflow.com/questions/65603923/terraform-rds-database-credentials)
+- [Terraform で AWS に DB を構築するとき manage\_master\_user\_password を使っていますか？ \- ISID テックブログ](https://tech.isid.co.jp/entry/terraform_manage_master_user_password)
 
 </details>

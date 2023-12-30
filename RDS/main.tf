@@ -5,10 +5,9 @@ variable "public_subnet_cidrs" { type = map(string) }
 variable "private_subnet_cidrs" { type = map(string) }
 variable "db_name" {}
 variable "db_username" {}
-variable "db_password" {}
 
 terraform {
-  required_version = "=v1.4.0"
+  required_version = "=v1.5.5"
 }
 
 provider "aws" {
@@ -39,7 +38,6 @@ module "rds" {
   app_name                  = var.name
   db_name                   = var.db_name
   db_username               = var.db_username
-  db_password               = var.db_password
   vpc_id                    = module.network.vpc_id
   subnet_ids                = module.network.pri_subnet_ids
   subnet_cidr_blocks        = module.network.pri_subnet_cidr_blocks

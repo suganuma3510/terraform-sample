@@ -25,4 +25,3 @@ private_subnet_cidrs = {
 
 db_name     = "testdb"
 db_username = "admin"
-db_password = "DhLhfwKQERvE4"
