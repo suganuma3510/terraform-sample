@@ -21,7 +21,7 @@ variable "engine" {
 }
 
 variable "engine_version" {
-  default = "8.0.33"
+  default = "8.0.35"
 }
 
 variable "db_instance" {

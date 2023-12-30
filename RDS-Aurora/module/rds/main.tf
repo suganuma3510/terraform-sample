@@ -4,14 +4,14 @@
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster
 resource "aws_rds_cluster" "default" {
-  cluster_identifier     = "${var.app_name}-aurora-cluster"
-  engine                 = var.engine
-  engine_version         = var.engine_version
-  database_name          = var.db_name
-  master_username        = var.db_username
-  master_password        = var.db_password
-  vpc_security_group_ids = [aws_security_group.rds.id]
-  db_subnet_group_name   = aws_db_subnet_group.rds.name
+  cluster_identifier          = "${var.app_name}-aurora-cluster"
+  engine                      = var.engine
+  engine_version              = var.engine_version
+  database_name               = var.db_name
+  master_username             = var.db_username
+  manage_master_user_password = true
+  vpc_security_group_ids      = [aws_security_group.rds.id]
+  db_subnet_group_name        = aws_db_subnet_group.rds.name
 
   skip_final_snapshot = true
 

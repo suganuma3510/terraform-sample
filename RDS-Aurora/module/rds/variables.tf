@@ -4,8 +4,6 @@ variable "db_name" {}
 
 variable "db_username" {}
 
-variable "db_password" {}
-
 variable "vpc_id" {}
 
 variable "pri_subnet_ids" {}
@@ -23,7 +21,7 @@ variable "engine" {
 }
 
 variable "engine_version" {
-  default = "5.7.mysql_aurora.2.11.1"
+  default = "8.0.mysql_aurora.3.05.1"
 }
 
 variable "db_instance" {
@@ -31,11 +29,11 @@ variable "db_instance" {
 }
 
 variable "db_instance_count" {
-  default = 1
+  default = 2
 }
 
 variable "family" {
-  default = "aurora-mysql5.7"
+  default = "aurora-mysql8.0"
 }
 
 variable "parameter_groups" {
