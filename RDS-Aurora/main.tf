@@ -7,7 +7,7 @@ variable "db_name" {}
 variable "db_username" {}
 
 terraform {
-  required_version = "=v1.4.0"
+  required_version = "=v1.5.5"
 }
 
 provider "aws" {
@@ -24,15 +24,22 @@ module "network" {
   pri_cidrs = var.private_subnet_cidrs
 }
 
+module "jump-ec2" {
+  source = "../RDS/module/ec2"
+
+  app_name   = var.name
+  vpc_id     = module.network.vpc_id
+  subnet_ids = module.network.pri_subnet_ids
+}
+
 module "rds-aurora" {
   source = "./module/rds"
 
   app_name                  = var.name
   db_name                   = var.db_name
   db_username               = var.db_username
-  db_password               = var.db_password
   vpc_id                    = module.network.vpc_id
   pri_subnet_ids            = module.network.pri_subnet_ids
   pri_subnet_cidr_blocks    = module.network.pri_subnet_cidr_blocks
-  source_security_group_ids = []
+  source_security_group_ids = [module.jump-ec2.ec2_security_group_id]
 }

@@ -48,6 +48,26 @@ mysql -u admin -p -h [RDSのエンドポイント]
 5. 以下の画像のように表示されれば接続成功
 ![RDS接続1](https://user-images.githubusercontent.com/57606507/142875634-7ddb9f1d-a3e1-46e2-b707-47fc94af85e2.png)
 
+##　Topics
+・RDS の利用可能なエンジンバージョンの一覧を表示
+```sh
+# --engine [mysql|postgres|aurora-mysql|aurora-postgres]
+aws rds describe-db-engine-versions \
+  --engine mysql \
+  --query 'DBEngineVersions[*].{EngineVersion: EngineVersion, Description: DBEngineVersionDescription}' \
+  --output table
+```
+
+・RDS の利用可能なインスタンスタイプを一覧で表示
+```sh
+# --engine [mysql|postgres|aurora-mysql|aurora-postgres]
+aws rds describe-orderable-db-instance-options \
+  --engine mysql \
+  --engine-version 8.0.35 \
+  --query 'OrderableDBInstanceOptions[*].DBInstanceClass' \
+  --output table
+```
+
 ## RDS (Relational Database Service)
 AWS クラウドでリレーショナルデータベースを簡単にセットアップし、運用し、拡張することのできるウェブサービス。
 
