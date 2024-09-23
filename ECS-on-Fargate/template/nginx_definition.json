@@ -16,23 +16,5 @@
         "awslogs-stream-prefix": "${SERVICE_NAME}"
       }
     }
-  },
-  {
-    "name": "cloudwatch-agent",
-    "image": "public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest",
-    "secrets": [
-      {
-        "name": "CW_CONFIG_CONTENT",
-        "valueFrom": "ecs-cwagent"
-      }
-    ],
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${LOGS_GROUP_NAME}",
-        "awslogs-region": "${REGION}",
-        "awslogs-stream-prefix": "${SERVICE_NAME}"
-      }
-    }
   }
 ]

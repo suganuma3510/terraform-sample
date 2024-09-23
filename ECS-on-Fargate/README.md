@@ -1,7 +1,7 @@
 # ECS-on-Fargate-Terraform
 
 ## 必要条件
-- Terraform v1.4.0
+- Terraform v1.9.5
 
 ## ディレクトリ構成
 ```
@@ -9,11 +9,31 @@
 ├── README.md
 ├── main.tf
 ├── module
+│   ├── cloudwatch
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   ├── ecr
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   ├── ecs_cluster
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
 │   ├── ecs_task
 │   │   ├── main.tf
 │   │   ├── outputs.tf
 │   │   └── variables.tf
-│   └── iam
+│   ├── iam_policy
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   ├── iam_role
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   └── security_group
 │       ├── main.tf
 │       ├── outputs.tf
 │       └── variables.tf

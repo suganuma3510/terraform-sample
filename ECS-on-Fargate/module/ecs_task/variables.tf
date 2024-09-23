@@ -4,7 +4,9 @@ variable "vpc_id" {}
 
 variable "subnet_ids" {}
 
-variable "source_security_group_ids" {
+variable "ecs_cluster_id" {}
+
+variable "security_groups" {
   type = list(string)
 }
 
@@ -17,16 +19,27 @@ variable "load_balancer_config" {
   default = null
 }
 
-variable "iam_role_arn" {}
+variable "task_role_arn" {}
 
-variable "ecs_cluster_arn" {}
+variable "execution_role_arn" {}
 
-variable "task_config" {
-  type = object({
-    cpu                   = number
-    memory                = number
-    desired_count         = number
-    container_definitions = string
-  })
-  description = "object of ecs task config"
+variable "cpu" {
+  type = number
+}
+
+variable "memory" {
+  type = number
+}
+
+variable "desired_count" {
+  type = number
+}
+
+variable "container_definitions" {
+  type = string
+}
+
+variable "cpu_architecture" {
+  type    = string
+  default = "X86_64"
 }
